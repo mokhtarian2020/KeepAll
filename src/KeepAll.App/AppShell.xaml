@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Shell xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+       xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+       xmlns:local="clr-namespace:KeepAll.App.Pages"
+       x:Class="KeepAll.App.AppShell"
+       Shell.NavBarIsVisible="False">
+  <TabBar>
+    <Tab Title="Inbox" Icon="tab_inbox.png">
+      <ShellContent ContentTemplate="{DataTemplate local:InboxPage}" />
+    </Tab>
+    <Tab Title="Media" Icon="tab_media.png">
+      <ShellContent ContentTemplate="{DataTemplate local:MediaPage}" />
+    </Tab>
+    <Tab Title="Search" Icon="tab_search.png">
+      <ShellContent ContentTemplate="{DataTemplate local:SearchPage}" />
+    </Tab>
+  </TabBar>
+  <MenuItem Text="Settings" Clicked="OnSettingsClicked" />
+</Shell>

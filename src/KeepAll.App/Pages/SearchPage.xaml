@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="KeepAll.App.Pages.SearchPage"
+             Title="Search">
+  <VerticalStackLayout Spacing="8">
+    <SearchBar x:Name="SearchBox" Placeholder="Search title or note" TextChanged="OnSearchChanged" />
+    <CollectionView x:Name="ResultsView" ItemsSource="{Binding Items}">
+      <CollectionView.ItemTemplate>
+        <DataTemplate>
+          <Grid Padding="10" ColumnDefinitions="Auto,*,Auto" BackgroundColor="{StaticResource SurfaceElevated}" Margin="0,8">
+            <Frame WidthRequest="44" HeightRequest="44" CornerRadius="8" Padding="0" HasShadow="False" BackgroundColor="#EEF2FF">
+              <Image Source="{Binding CoverUrl}" Aspect="AspectFill"/>
+            </Frame>
+            <VerticalStackLayout Grid.Column="1" Spacing="2" Padding="8,0">
+              <Label Text="{Binding Title}" FontAttributes="Bold"/>
+              <Label Text="{Binding SourceApp}" FontSize="12" TextColor="{StaticResource TextSecondary}" />
+            </VerticalStackLayout>
+            <Button Grid.Column="2" Text="Open" Clicked="OnOpenClicked"/>
+          </Grid>
+        </DataTemplate>
+      </CollectionView.ItemTemplate>
+    </CollectionView>
+  </VerticalStackLayout>
+</ContentPage>
