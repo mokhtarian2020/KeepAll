@@ -17,6 +17,12 @@
 
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">21.0</SupportedOSPlatformVersion>
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">11.0</SupportedOSPlatformVersion>
+		
+		<!-- Fix Android API level alignment -->
+		<TargetFrameworkVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">v34.0</TargetFrameworkVersion>
+		
+		<!-- Fix SQLite runtime identifier warnings for .NET 8+ -->
+		<RuntimeIdentifiers Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">android-arm;android-arm64;android-x64</RuntimeIdentifiers>
 	</PropertyGroup>
 
 	<ItemGroup>
