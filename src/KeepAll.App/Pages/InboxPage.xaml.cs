@@ -1,6 +1,7 @@
 using System.Collections.ObjectModel;
 using KeepAll.Core.Abstractions;
 using KeepAll.Core.Models;
+using KeepAll.Storage;
 
 namespace KeepAll.App.Pages;
 
@@ -20,12 +21,26 @@ public partial class InboxPage : ContentPage
 
     private async Task RefreshAsync()
     {
-        // Import any pending shared items first
-        await ImportPendingSharedItems();
-        
-        Items.Clear();
-        foreach (var it in await _repo.GetAllAsync())
-            Items.Add(it);
+        try
+        {
+            // Ensure database is initialized
+            if (_repo is SqliteItemRepository sqliteRepo)
+            {
+                await sqliteRepo.InitAsync();
+            }
+            
+            // Import any pending shared items first
+            await ImportPendingSharedItems();
+            
+            Items.Clear();
+            foreach (var it in await _repo.GetAllAsync())
+                Items.Add(it);
+        }
+        catch (Exception ex)
+        {
+            // Show error to user instead of crashing
+            await DisplayAlert("Error", $"Failed to load items: {ex.Message}", "OK");
+        }
     }
 
     private async Task ImportPendingSharedItems()

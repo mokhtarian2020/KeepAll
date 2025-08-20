@@ -23,11 +23,11 @@ public static class MauiProgram
 
         // DI
         var dbPath = Path.Combine(FileSystem.AppDataDirectory, "keepall.db3");
-        builder.Services.AddSingleton(new SqliteItemRepository(dbPath));
         builder.Services.AddSingleton<IItemRepository>(sp =>
         {
-            var repo = sp.GetRequiredService<SqliteItemRepository>();
-            repo.InitAsync().GetAwaiter().GetResult();
+            var repo = new SqliteItemRepository(dbPath);
+            // Initialize database async without blocking startup
+            _ = Task.Run(async () => await repo.InitAsync());
             return repo;
         });
         builder.Services.AddSingleton<IMetadataService, MetadataService>();
