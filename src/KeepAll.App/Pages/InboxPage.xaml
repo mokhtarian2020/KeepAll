@@ -3,33 +3,48 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="KeepAll.App.Pages.InboxPage"
              Title="Inbox">
-  <Grid RowDefinitions="Auto,Auto,*">
-    <Grid Padding="4,0,4,8" Row="0">
+  <Grid RowDefinitions="Auto,Auto,*" Padding="16,8">
+    <!-- Header Section with proper layout -->
+    <StackLayout Grid.Row="0" Spacing="4" Margin="0,8,0,16">
       <Label Text="KeepAll" FontSize="28" FontAttributes="Bold" />
       <Label Text="Save anything in one tap" FontSize="12" TextColor="{StaticResource TextSecondary}" />
+    </StackLayout>
+
+    <!-- Search and Add Section with better spacing -->
+    <Grid Grid.Row="1" ColumnDefinitions="Auto,*" Spacing="12" Margin="0,0,0,16">
+      <Button Grid.Column="0" Text="+ Add" Clicked="OnAddClicked" Padding="16,8"/>
+      <SearchBar Grid.Column="1" x:Name="SearchBox" Placeholder="Search title or note" TextChanged="OnSearchChanged" />
     </Grid>
 
-    <HorizontalStackLayout Grid.Row="1" Spacing="8">
-      <Button Text="+ Add" Clicked="OnAddClicked"/>
-      <SearchBar x:Name="SearchBox" Placeholder="Search title or note" TextChanged="OnSearchChanged" />
-    </HorizontalStackLayout>
-
+    <!-- Items List with better card design -->
     <CollectionView x:Name="ItemsView" Grid.Row="2" ItemsSource="{Binding Items}" SelectionMode="None">
       <CollectionView.ItemTemplate>
         <DataTemplate>
-          <Grid Padding="10" ColumnDefinitions="Auto,*,Auto" BackgroundColor="{StaticResource SurfaceElevated}" Margin="0,8" >
-            <Frame WidthRequest="44" HeightRequest="44" CornerRadius="8" Padding="0" HasShadow="False" BackgroundColor="#EEF2FF">
-              <Image Source="{Binding CoverUrl}" Aspect="AspectFill"/>
-            </Frame>
-            <VerticalStackLayout Grid.Column="1" Spacing="2" Padding="8,0">
-              <Label Text="{Binding Title}" FontAttributes="Bold"/>
-              <Label Text="{Binding SourceApp}" FontSize="12" TextColor="{StaticResource TextSecondary}" />
-            </VerticalStackLayout>
-            <VerticalStackLayout Grid.Column="2" Spacing="6" HorizontalOptions="End" VerticalOptions="Center">
-              <Button Text="Open" Clicked="OnOpenClicked"/>
-              <ImageButton Source="more.png" Clicked="OnMoreClicked" />
-            </VerticalStackLayout>
-          </Grid>
+          <Border BackgroundColor="{StaticResource SurfaceElevated}" 
+                  Stroke="#E0E0E0"
+                  StrokeThickness="1"
+                  CornerRadius="8" 
+                  Margin="0,4,0,8">
+            <Grid Padding="16,12" ColumnDefinitions="Auto,*,Auto">
+              <!-- Icon -->
+              <Border WidthRequest="44" HeightRequest="44" CornerRadius="8" BackgroundColor="#EEF2FF">
+                <Label Text="📄" FontSize="24" HorizontalOptions="Center" VerticalOptions="Center"/>
+              </Border>
+              
+              <!-- Content -->
+              <StackLayout Grid.Column="1" Spacing="4" Padding="12,0,8,0">
+                <Label Text="{Binding Title}" FontAttributes="Bold" LineBreakMode="TailTruncation"/>
+                <Label Text="{Binding SourceApp}" FontSize="12" TextColor="{StaticResource TextSecondary}" />
+                <Label Text="{Binding CreatedAt, StringFormat='{0:MMM dd, yyyy}'}" FontSize="11" TextColor="#888" />
+              </StackLayout>
+              
+              <!-- Actions -->
+              <StackLayout Grid.Column="2" Spacing="8" HorizontalOptions="End" VerticalOptions="Center">
+                <Button Text="Open" Clicked="OnOpenClicked" FontSize="12" Padding="12,6"/>
+                <Button Text="⋯" Clicked="OnMoreClicked" FontSize="16" Padding="8,4" BackgroundColor="Transparent"/>
+              </StackLayout>
+            </Grid>
+          </Border>
         </DataTemplate>
       </CollectionView.ItemTemplate>
     </CollectionView>

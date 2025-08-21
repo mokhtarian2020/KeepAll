@@ -26,8 +26,16 @@ public static class MauiProgram
         builder.Services.AddSingleton<IItemRepository>(sp =>
         {
             var repo = new SqliteItemRepository(dbPath);
-            // Initialize database async without blocking startup
-            _ = Task.Run(async () => await repo.InitAsync());
+            // Initialize database synchronously to avoid TypeInitialization errors
+            try
+            {
+                repo.InitAsync().GetAwaiter().GetResult();
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Database initialization error: {ex}");
+                // Continue with uninitialized repo - it will retry on first use
+            }
             return repo;
         });
         builder.Services.AddSingleton<IMetadataService, MetadataService>();

@@ -23,7 +23,7 @@ public partial class InboxPage : ContentPage
     {
         try
         {
-            // Ensure database is initialized
+            // Ensure database is initialized first with proper error handling
             if (_repo is SqliteItemRepository sqliteRepo)
             {
                 await sqliteRepo.InitAsync();
@@ -33,13 +33,21 @@ public partial class InboxPage : ContentPage
             await ImportPendingSharedItems();
             
             Items.Clear();
-            foreach (var it in await _repo.GetAllAsync())
-                Items.Add(it);
+            var items = await _repo.GetAllAsync();
+            foreach (var item in items.OrderByDescending(x => x.CreatedAt))
+            {
+                Items.Add(item);
+            }
         }
         catch (Exception ex)
         {
-            // Show error to user instead of crashing
-            await DisplayAlert("Error", $"Failed to load items: {ex.Message}", "OK");
+            // Show user-friendly error message
+            var message = ex.InnerException?.Message ?? ex.Message;
+            if (message.Contains("TypeInitialization") || message.Contains("SQLite"))
+            {
+                message = "Database initialization failed. Please restart the app.";
+            }
+            await DisplayAlert("Error", $"Failed to load items: {message}", "OK");
         }
     }
 
