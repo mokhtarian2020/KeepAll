@@ -20,16 +20,16 @@
     <CollectionView x:Name="ItemsView" Grid.Row="2" ItemsSource="{Binding Items}" SelectionMode="None">
       <CollectionView.ItemTemplate>
         <DataTemplate>
-          <Border BackgroundColor="{StaticResource SurfaceElevated}" 
-                  Stroke="#E0E0E0"
-                  StrokeThickness="1"
-                  CornerRadius="8" 
-                  Margin="0,4,0,8">
-            <Grid Padding="16,12" ColumnDefinitions="Auto,*,Auto">
+          <Frame BackgroundColor="{StaticResource SurfaceElevated}" 
+                 HasShadow="True"
+                 CornerRadius="8" 
+                 Margin="0,4,0,8"
+                 Padding="16,12">
+            <Grid ColumnDefinitions="Auto,*,Auto">
               <!-- Icon -->
-              <Border WidthRequest="44" HeightRequest="44" CornerRadius="8" BackgroundColor="#EEF2FF">
+              <Frame Grid.Column="0" WidthRequest="44" HeightRequest="44" CornerRadius="8" BackgroundColor="#EEF2FF" HasShadow="False" Padding="0">
                 <Label Text="📄" FontSize="24" HorizontalOptions="Center" VerticalOptions="Center"/>
-              </Border>
+              </Frame>
               
               <!-- Content -->
               <StackLayout Grid.Column="1" Spacing="4" Padding="12,0,8,0">
@@ -44,7 +44,7 @@
                 <Button Text="⋯" Clicked="OnMoreClicked" FontSize="16" Padding="8,4" BackgroundColor="Transparent"/>
               </StackLayout>
             </Grid>
-          </Border>
+          </Frame>
         </DataTemplate>
       </CollectionView.ItemTemplate>
     </CollectionView>

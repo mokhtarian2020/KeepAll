@@ -25,18 +25,7 @@ public static class MauiProgram
         var dbPath = Path.Combine(FileSystem.AppDataDirectory, "keepall.db3");
         builder.Services.AddSingleton<IItemRepository>(sp =>
         {
-            var repo = new SqliteItemRepository(dbPath);
-            // Initialize database synchronously to avoid TypeInitialization errors
-            try
-            {
-                repo.InitAsync().GetAwaiter().GetResult();
-            }
-            catch (Exception ex)
-            {
-                System.Diagnostics.Debug.WriteLine($"Database initialization error: {ex}");
-                // Continue with uninitialized repo - it will retry on first use
-            }
-            return repo;
+            return new SqliteItemRepository(dbPath);
         });
         builder.Services.AddSingleton<IMetadataService, MetadataService>();
 
