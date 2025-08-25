@@ -23,12 +23,6 @@ public partial class InboxPage : ContentPage
     {
         try
         {
-            // Ensure database is initialized first with proper error handling
-            if (_repo is SqliteItemRepository sqliteRepo)
-            {
-                await sqliteRepo.InitAsync();
-            }
-            
             // Import any pending shared items first
             await ImportPendingSharedItems();
             
@@ -41,12 +35,22 @@ public partial class InboxPage : ContentPage
         }
         catch (Exception ex)
         {
-            // Show user-friendly error message
+            // Show user-friendly error message with specific guidance
             var message = ex.InnerException?.Message ?? ex.Message;
-            if (message.Contains("TypeInitialization") || message.Contains("SQLite"))
+            
+            // Check for common SQLite initialization issues
+            if (message.Contains("TypeInitialization") || 
+                message.Contains("SQLite") || 
+                message.Contains("database") ||
+                message.Contains("unable to open database file"))
             {
-                message = "Database initialization failed. Please restart the app.";
+                message = "Database initialization failed. This may be due to insufficient storage space or permissions. Please restart the app and try again.";
             }
+            else if (message.Contains("permission", StringComparison.OrdinalIgnoreCase))
+            {
+                message = "Storage permission denied. Please check app permissions and try again.";
+            }
+            
             await DisplayAlert("Error", $"Failed to load items: {message}", "OK");
         }
     }

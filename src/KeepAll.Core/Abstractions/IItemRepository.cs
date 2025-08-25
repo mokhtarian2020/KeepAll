@@ -7,6 +7,7 @@ namespace KeepAll.Core.Abstractions
 {
     public interface IItemRepository
     {
+        Task InitAsync(); // Add explicit initialization method
         Task<Item> UpsertAsync(Item item, CancellationToken ct = default);
         Task<Item?> GetAsync(string id, CancellationToken ct = default);
         Task<IReadOnlyList<Item>> GetAllAsync(CancellationToken ct = default);

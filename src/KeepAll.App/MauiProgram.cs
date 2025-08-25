@@ -21,11 +21,13 @@ public static class MauiProgram
                 f.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
             });
 
-        // DI
-        var dbPath = Path.Combine(FileSystem.AppDataDirectory, "keepall.db3");
+        // DI - Use platform-agnostic path approach
+        var dbPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "keepall", "keepall.db3");
         builder.Services.AddSingleton<IItemRepository>(sp =>
         {
-            return new SqliteItemRepository(dbPath);
+            var repo = new SqliteItemRepository(dbPath);
+            // Note: Don't await here - initialization will happen on first use
+            return repo;
         });
         builder.Services.AddSingleton<IMetadataService, MetadataService>();
 
